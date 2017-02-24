@@ -1,0 +1,214 @@
+cisco@onepk:~$ python
+Python 2.7.3 (default, Feb 27 2014, 19:58:35) 
+[GCC 4.6.3] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from device import Device
+>>> sw1 = Device(ip='172.23.193.210', username='admin', password='P@ssw0rd')
+>>> sw.open()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'sw' is not defined
+>>> sw1.open()
+>>> import json
+>>> import xmltodict
+>>> show_vpc_command = sw1.show('show vpc brief')
+>>> result_vpc_command = xmltodict.parse(show_vpc_command[1])
+>>> print json.dumps(result_vpc_command, indent=4)
+{
+    "ins_api": {
+        "type": "cli_show", 
+        "version": "1.0", 
+        "sid": "eoc", 
+        "outputs": {
+            "output": {
+                "body": {
+                    "vpc-domain-id": "1", 
+                    "vpc-peer-status": "peer-ok", 
+                    "vpc-peer-status-reason": "SUCCESS", 
+                    "vpc-peer-keepalive-status": "peer-alive", 
+                    "vpc-peer-consistency": "consistent", 
+                    "vpc-per-vlan-peer-consistency": "consistent", 
+                    "vpc-peer-consistency-status": "SUCCESS", 
+                    "vpc-type-2-consistency": "consistent", 
+                    "vpc-type-2-consistency-status": "SUCCESS", 
+                    "vpc-role": "primary", 
+                    "num-of-vpcs": "1", 
+                    "peer-gateway": "1", 
+                    "dual-active-excluded-vlans": "-", 
+                    "vpc-graceful-consistency-check-status": "enabled", 
+                    "vpc-auto-recovery-status": "Disabled", 
+                    "vpc-delay-restore-status": "Timer is off.(timeout = 30s)", 
+                    "vpc-delay-restore-svi-status": "Timer is off.(timeout = 10s)", 
+                    "operational-l3-peer": "Disabled", 
+                    "vpc-peer-link-hdr": "Start of VPC peer-link table", 
+                    "TABLE_peerlink": {
+                        "ROW_peerlink": {
+                            "peer-link-id": "1", 
+                            "peerlink-ifindex": "Po4096", 
+                            "peer-link-port-state": "1", 
+                            "peer-up-vlan-bitset": "1,3,10"
+                        }
+                    }, 
+                    "vpc-end": [
+                        "End of table", 
+                        "End of table"
+                    ], 
+                    "vpc-hdr": "Start of vPC table", 
+                    "vpc-not-es": "vPC complex", 
+                    "TABLE_vpc": {
+                        "ROW_vpc": {
+                            "vpc-id": "10", 
+                            "vpc-ifindex": "Po10", 
+                            "vpc-port-state": "0", 
+                            "vpc-thru-peerlink": "1", 
+                            "vpc-consistency": "consistent", 
+                            "vpc-consistency-status": "SUCCESS", 
+                            "up-vlan-bitset": "-", 
+                            "es-attr": "DF: Invalid"
+                        }
+                    }
+                }, 
+                "input": "show vpc brief", 
+                "msg": "Success", 
+                "code": "200"
+            }
+        }
+    }
+}
+>>> result_vpc_command_json = json.dumps(result_vpc_command, indent=4)
+>>> print result_vpc_command_json['outputs']['output']['body']['TABLE_peerlink']['ROW_peerlink']['peerlink-ifindex']
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: string indices must be integers, not str
+>>> peerlink=result_vpc_command_json['outputs']['output']['body']['TABLE_peerlink']['ROW_peerlink']['peerlink-ifindex']
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: string indices must be integers, not str
+>>> peerlink=result_vpc_command['outputs']['output']['body']['TABLE_peerlink']['ROW_peerlink']['peerlink-ifindex']
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: 'outputs'
+>>> peerlink=result_vpc_command['ins_api']['outputs']['output']['body']['TABLE_peerlink']['ROW_peerlink']['peerlink-ifindex']
+>>> print peerlink
+Po4096
+>>> peerlink_vlans=result_vpc_command['ins_api']['outputs']['output']['body']['TABLE_peerlink']['ROW_peerlink']['peer-up-vlan-bitset']
+>>> print peerlink_vlans
+1,3,10
+>>> peerlink_vlans.split(",")
+[u'1', u'3', u'10']
+>>> peerlink_vlans_formatted=split(",", peerlink_vlans)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'split' is not defined
+>>> peerlink_vlans_formatted=peerlink_vlans.split(",")
+>>> print peerlink_vlans_formatted([1])
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'list' object is not callable
+>>> print peerlink_vlans_formatted[1]
+3
+>>> print peerlink_vlans_formatted[0]
+1
+>>> 
+>>> 
+>>> 
+>>> 
+>>> for i in peerlink_vlans_formatted:
+...     print "===" % peerlink_vlans_formatted
+... 
+===
+===
+===
+>>> for i in peerlink_vlans_formatted:
+...     print peerlink_vlans_formatted[i]
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+TypeError: list indices must be integers, not unicode
+>>> for i in peerlink_vlans_formatted:
+...     print % peerlink_vlans_formatted[i]
+  File "<stdin>", line 2
+    print % peerlink_vlans_formatted[i]
+          ^
+SyntaxError: invalid syntax
+>>> for i in peerlink_vlans_formatted:
+...     print i
+... 
+1
+3
+10
+>>> check_vlan=3
+>>> for i in peerlink_vlans_formatted:
+...     if i = check_vlan:
+  File "<stdin>", line 2
+    if i = check_vlan:
+         ^
+SyntaxError: invalid syntax
+>>> for i in peerlink_vlans_formatted:
+...     if i == check_vlan:
+...         print "bazinga"
+...     else:
+...         print "kabuto"
+... 
+kabuto
+kabuto
+kabuto
+>>> check_vlan='3'
+>>> for i in peerlink_vlans_formatted:
+...     if i == check_vlan:
+...         print "bazinga"
+...     else:
+...         print "kabuto"
+... 
+kabuto
+bazinga
+kabuto
+>>> for i in peerlink_vlans_formatted:
+...     if i == check_vlan:
+...         print "vlan %i is the bastard guy"
+... 
+vlan %i is the bastard guy
+>>> for i in peerlink_vlans_formatted:
+...     if i == check_vlan:
+...         print "vlan %d is the bastard guy" % i
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+TypeError: %d format: a number is required, not unicode
+>>> for i in peerlink_vlans_formatted:
+...     if i == check_vlan:
+...         print "vlan" i " is the bastard guy"
+  File "<stdin>", line 3
+    print "vlan" i " is the bastard guy"
+                 ^
+SyntaxError: invalid syntax
+>>> 
+>>> for i in peerlink_vlans_formatted:
+...     if i == check_vlan:
+...         print vlan i
+  File "<stdin>", line 3
+    print vlan i
+               ^
+SyntaxError: invalid syntax
+>>> for i in peerlink_vlans_formatted:
+...     if i == check_vlan:
+...         print i
+... 
+3
+>>> for i in peerlink_vlans_formatted:
+...     if i == check_vlan:
+...         print "vlan %d is the bastard" % i
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+TypeError: %d format: a number is required, not unicode
+>>> for i in peerlink_vlans_formatted:
+...     if i == check_vlan:
+...         print "vlan %r is the bastard" % i
+... 
+vlan u'3' is the bastard
+>>> for i in peerlink_vlans_formatted:
+...     if i == check_vlan:
+...         print "vlan %s is the bastard" % i
+... 
+vlan 3 is the bastard
